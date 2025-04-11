@@ -1,0 +1,27 @@
+1 besoin : realiser un reseau virtuel
+2 objectif : utiliser Docker / BGP / VXLAN 
+3 Timing : 200h => 5 mois a 8h/j 5 jours/7
+4 Ressources : 2 etudiants avec le materiel fournis par 42
+
+PROJET : Realisation d'un reseau virtuel en utilisant des technos specifiques (Docker, BGP, VXLAN, GNS3) en 5 mois avec 2 etudiants utilisant les ressources fournies par 42.
+
+---------------
+Besoins:
+
+VM - run avec app -> docker
+chaque element doit etre commente
+
+P1:
+
+simulation d'un reseau - connection de 2 images - images Dockers/GNS3
+
+P2:
+
+utilisation Vxlan - 
+configurer les routeurs en statique
+configurer les routeurs pour le multicast
+
+P3:
+
+Avoir de liaisons entre clients
+Optimisation des liaisons

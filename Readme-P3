@@ -1,0 +1,72 @@
+P1 installation de docker et GNS3
+P2 creation d'un reseau basique avec Vxlan
+P3 configuration de BGP EVPN 
+
+_________________________________________________
+
+# un peu de vocabulaire pour mieux se comprendre
+
+GNS3: Logiciel de simulation de reseaux complexes
+
+Docker: Plateforme pour develloper des applications dans des conteneurs (environnement leger et portable)
+
+Zebra/Quagga: Logiciel open source contenant des protocoles de routage
+
+BGP(Border Gateway Protocol): Protocole de routage utilise pour echanger entre differents AS (Autonomous Systems)
+
+OSPF(Open Shortest Path First): Protocole de routage interne
+
+Busybox:Logiciel avec les commandes simplifiees unix
+
+VXLAN(Virtual eXtensible Local Area Network): reseau virtuel installe sur un reseau physique
+
+EVPN(Ethernet Virtual Private Network): Pour gerer dans un datacenter la connextion entre les serveurs et les autres appareils
+
+VTEP(Vxlan Tunel EndPoint): Transport des donnees entre les sous reseaux
+
+RR(Route Reflector): Enregistre les routes apprises pour reduire le nombre de connexions de voisinage
+
+_________________________________________________
+
+Quelque commandes
+
+Configuration de Vxlan en statitique et dynamique
+
+	ip link add = ajoute
+	ip link set = active
+
+diff statique / dynamique 
+
+	ip link add name vxlan10 type vxlan id 10 dev eth0 remote 10.1.1.1 local 10.1.1.2 dstport 4789
+	ip link add name vxlan10 type vxlan id 10 dev eth0 group 239.1.1.1 dstport 4789
+
+configuration BGP RR
+
+	no ipv6 forwarding = desactive le routage ipv6
+
+config des interfaces eth
+	`interface ethX`
+	`ip address 10.1.1.X/30`
+
+config loopback = interface pricipale pour ospf
+	`interface lo`
+	`ip address 1.1.1.1/32`
+
+Config BGP
+	router bgp 1
+	neighbor ibgp peer-group  	 -> creation groupe de voisinage
+	neighbor ibgp remote-as 1  	 -> 
+	neighbor ibgp update-source lo	 -> recup adresse de la loopback
+	bgp listen range 1.1.1.0/29 peer-group ibgp` -> ecoute(accepte) les add du groupe
+
+
+	address-family l2vpn evpn	-> config les echanges de routes evpn 
+	neighbor ibgp activate		-> active le groupe igbp
+	neighbor ibgp route-reflector-client -> ative RR pour ce groupe
+	exit-address-family
+
+config OSPF
+
+	router ospf		-> active ospf 
+	network 0.0.0.0/0 area 0
+
